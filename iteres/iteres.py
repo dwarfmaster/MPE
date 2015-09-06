@@ -8,6 +8,12 @@ f0 = []
 for i in range(10):
     f0 += [f(i)]
 print(f0)
+
+def make_vect(l, v):
+    t = []
+    for i in range(l):
+        t.append(v)
+    return t
 # }}}
 
 # {{{ 1/ admet_point_fixe
@@ -102,21 +108,30 @@ print(temps_de_convergence([5, 5, 2, 2, 0, 2, 2], 1))
 
 # {{{ 7/ temps_de_convergence_max
 def temps_de_convergence_max(t):
-    seens = []
+    values = make_vect(len(t), -1)
     m = 0
     for i in range(len(t)):
-        if i in seens:
+        if values[i] != -1:
             continue
         j = i
+        first = 0
         n = 0
         while t[j] != j:
-            seens += [j]
+            if values[j] != -1:
+                first = values[j]
+                break
+            else:
+                n += 1
             j = t[j]
-            n += 1
-        if n > m:
-            m = n
+        v = n + first
+        if v > m:
+            m = v
+        j = i
+        while values[j] == -1:
+            values[j] = n + first
+            n -= 1
     return m
 
-print(temps_de_convergence_max([5, 5, 2, 2, 0, 2, 2]))
+print(temps_de_convergence_max([5, 5, 2, 2, 0, 2, 2, 0, 0, 0, 0, 0, 10, 0, 0]))
 # }}}
 
