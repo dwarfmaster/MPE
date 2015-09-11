@@ -16,6 +16,7 @@ def make_vect(l, v):
     return t
 # }}}
 
+# {{{ Partie 1
 # {{{ 1/ admet_point_fixe
 def admet_point_fixe(a):
     for i in range(len(a)):
@@ -134,4 +135,76 @@ def temps_de_convergence_max(t):
 
 print(temps_de_convergence_max([5, 5, 2, 2, 0, 2, 2, 0, 0, 0, 0, 0, 10, 0, 0]))
 # }}}
+# }}}
 
+# {{{ Partie 2
+# {{{ 8/ est_croissante
+def est_croissante(t):
+    for i in range(len(t)-1):
+        if t[i] > t[i+1]:
+            return False
+    return True
+# }}}
+
+# {{{ 9/ point_fixe
+def point_fixe(t):
+    m = 0
+    M = len(t)
+    while M - m > 1:
+        i = int((M+m)/2)
+        if t[i] == i:
+            return i
+        elif t[i] > i:
+            m = i + 1
+        else:
+            M = i
+
+print(point_fixe([1, 3, 3, 5, 5, 5]))
+# }}}
+
+# {{{ 10/ Démonstration
+# Preuve terminaison
+# Considérons l'entier (M-m)
+# On pose i = E((M+m)/2)
+# Si t[i] == i:
+#     ca termine.
+# Si t[i] > i:
+#     M'=M et m'=i+1, on a i >= m => m'>m
+#     Donc M'-m' < M-m
+#     De plus, i<M => m'<=M => M'-m' >= 0
+# Si t[i] < i:
+#     M'=i et m'=m, on a i<M => M'<M
+#     Donc M'-m' < M-m
+#     De plus, i>=m => M'>=m' => M'-m' >= 0
+# Donc l'algorithme termine
+# }}}
+
+# {{{ 11/
+# m et x deux pts fixes
+# m <= x => f^k(m) <= f^k(x)
+# }}}
+
+fn = [0, 2, 4, 6, 4, 8, 0, 2, 0, 6]
+# {{{ 12/ 
+# Posons x = pgcd(xi)
+# Vi, f^k(1) | xi => f^k(1) | x
+# f^k(i) \in {xi} => x | f^k(1)
+# Donc f^k(1) = x
+# }}}
+
+# {{{ 13/ pgcd_points_fixes
+def pgcd_points_fixes(t):
+    x = 1
+    while t[x] != x:
+        x = t[x]
+    return x
+
+print(pgcd_points_fixes(fn))
+# }}}
+
+# {{{ 14/ Preuve temps logarithmique
+# f^k(1) != f^(k+1)(1) => [ f^k(1) | f^(k+1)(1) ] f^(k+1)(1) = 0 ou f^(k+1)(1) >= 2f^k(1)
+# La suite 1,f(1),...,f^(k+1)(1) est une suite croissante de termes distincts non nuls. D'où n-1 >= f^k(1) >= 2^k => k <= log2(n-1)
+# }}}
+
+# }}}
