@@ -141,3 +141,60 @@ croissante_ex [|1; 5; 6; 3; 7; 9|];;
 
 (* }}} *)
 
+(* {{{ IV/ Manipulations de listes *)
+(* {{{ 7/ *)
+let map_list_imp f l=
+    let tail = ref l in
+    let ret = ref [] in
+    while !tail != [] do
+        let h = hd !tail in
+        ret := !ret@[f h];
+        tail := tl !tail
+    done;
+    !ret;;
+let sq x = x*x;;
+map_list_imp sq [1; 2; 3; 4; 5; 6; 7; 8; 9; 10];;
+
+let map_list f l=
+    let rec map_list_rec a = match a with
+    | []     -> []
+    | hd::tl -> (f hd)::map_list_rec tl
+    in map_list_rec l;;
+map_list_imp sq [1; 2; 3; 4; 5; 6; 7; 8; 9; 10];;
+
+(* }}} *)
+
+(* {{{ 8/ *)
+let cart_prod1 l1 l2 =
+    let rec prd1 a l acc = match a with
+    | []   -> acc
+    | h::t -> let rec prd2 e l acc = match l with
+        | [] -> acc
+        | h::t -> prd2 e t ((e,h)::acc)
+        in prd1 t l (prd2 h l acc)
+    in prd1 l1 l2 [];;
+cart_prod1 [1;2;3] ["a"; "b"; "c"];;
+
+let rec it_list f a=function
+    | []       -> a
+    | x::queue -> it_list f (f a x) queue;;
+let add x y = y+x;;
+let S = it_list add 0;;
+S [1; 2; 3];;
+
+let rec it_list_end f a=function
+    | []       -> a
+    | x::queue -> f x (it_list_end f a queue);;
+let S2 = it_list_end add 0;;
+S2 [1; 2; 3];;
+
+let cart_prod l1 l2=
+    let prod e a = (e,a) in
+    let mp l q e = (map_list (prod e) l)@q in
+    it_list (mp l2) [] l1;;
+cart_prod [1;2;3] ["a"; "b"; "c"];;
+
+(* }}} *)
+
+(* }}} *)
+
