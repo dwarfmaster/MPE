@@ -1,0 +1,29 @@
+# Chiffrage RSA
+## Génération de la clée
+ - Achat de deux nombres premiers p < q très grand.
+ - Posons n = p*q
+   On calcule phi(n) = (p-1)(q-1)
+ - On choisit d premier avec phi(n)
+ - On détermine e tq ed=1[phi(n)]
+ - La clée publique est (e,n)
+
+## Usage
+ - Soit m le message. On calcule M=m^e[n]
+ - Envoit de M
+
+## Décriptage
+ - On a M^d=m[n]
+   On peut donc retrouver m
+
+## Preuve
+ed=1[phi(n)] => e inverse de d dans Z/phi(n)Z
+M^d = m^ed[n] = m^(1+k.phi(n))[n] = m*(m^phi(n))^k[n]
+ - Dans le cas général, comme p et q très grands, on a m<p et m<q d'où pgcd(m,p)=1 et pgcd(m,q)=1.
+   Donc m^phi(n)=1[n] d'où M^q=m[n]
+ - Si p|m et p|n, on a n|m
+   On a alors M = m^e[n] = 0[n] => M^d = 0[n] = m[n]
+ - Si q|m et pgcd(m,p)=1
+   Alors M^d = m(m^(p-1))^(k*(q-1))[n]
+   Donc M^d = m(m^(p-1))^(k*(q-1))[p] = m[p] (Fermat)
+   M = m^e[n] donc M = m^e[q] = 0[q] => M^d = 0[q] = m[q]
+
