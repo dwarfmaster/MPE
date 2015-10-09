@@ -1,6 +1,9 @@
 #!/usr/bin/python3
+# vim:set foldmethod=marker:
 
-# {{{ Exercice 1
+import random as rd
+
+# {{{ Piles
 def pile_new():
     return []
 
@@ -38,6 +41,7 @@ def permcirc(l, n):
 
 # }}}
 
+# {{{ TD4
 # {{{ Exercice 2
 def cre_id(n):
     m = []
@@ -149,4 +153,159 @@ def PostFixe(expr):
             pile_push(p, expr[i])
     return pile_pop(p)
 # }}}
+# }}}
+
+# {{{ TD5
+# {{{ Exercice 1
+def remplacer(pile, anc, nouv):
+    p = pile_new()
+    while not pile_empty(pile):
+        e = pile_pop(pile)
+        if e == anc:
+            pile_push(p, nouv)
+        else:
+            pile_push(p, e)
+    return retourner(p)
+
+# }}}
+
+# {{{ Exercice 2
+def isop(c):
+    return c == "+" or c == "-" or c == "*"
+def priop(c):
+    if c == "+":
+        return 2
+    elif c == "-":
+        return 1
+    else:
+        return 0
+
+def postfix(expr):
+    p = pile_new()
+    pile_push(p, "(")
+    expr = expr.split(" ") + [")"]
+    s = ""
+    i = 0
+    while not pile_empty(p):
+        c = expr[i]
+        if c == "(":
+            pile_push(p, "(")
+        elif isop(c):
+            op = pile_pop(p)
+            while isop(p) and priop(p) >= priop(c):
+                s += " {}".format(op)
+                op = pile_pop(p)
+            pile_push(p, op)
+            pile_push(p, c)
+        elif c == ")":
+            op = pile_pop(p)
+            while op != "(":
+                s += " {}".format(op)
+                op = pile_pop(p)
+        else:
+            s += " {}".format(c)
+        i += 1
+    return s
+
+print(postfix("( 2 - ( 3 * 4 ) ) * 5"))
+print(postfix("( 1 + 2 ) * 3 + 4"))
+print(postfix("32 - 2 * ( 12 - ( 7 - 2 ) * 3 )"))
+# }}}
+
+# {{{ Exercice 3
+def evl(expr):
+    pf = expr.split(" ")
+    p = pile_new()
+    for i in range(len(pf)):
+        if pf[i] == "":
+            continue
+        if isop(pf[i]):
+            n1 = pile_pop(p)
+            n2 = pile_pop(p)
+            if pf[i] == "+":
+                pile_push(p, n1 + n2)
+            elif pf[i] == "*":
+                pile_push(p, n1 * n2)
+            elif pf[i] == "-":
+                pile_push(p, n2 - n1)
+        else:
+            pile_push(p, int(pf[i]))
+    return pile_pop(p)
+print(evl("30 5 2 3 + * -"))
+print(evl(postfix("( 3 + 4 ) * ( 3 - 1 )")))
+print(evl(postfix("32 - 2 * ( 12 - ( 7 - 2 ) * 3 )")))
+# }}}
+
+# {{{ Exercice 4
+def _permalea(l, n):
+    if n == 0:
+        return l
+    i = rd.randint(0, n-1)
+    t = l[i]
+    l[i] = l[n]
+    l[n] = t
+    return _permalea(l, n-1)
+def permalea(l):
+    return _permalea(l, len(l) - 1)
+print(permalea(list(range(10))))
+
+def sortinsert(l):
+    for i in range(1, len(l)):
+        t = l[i]
+        j = i-1
+        while j >= 0 and l[j] > t:
+            l[j+1] = l[j]
+            j = j-1
+        j = max(0, j+1)
+        l[j] = t
+
+l = permalea(list(range(20)))
+print(l)
+sortinsert(l)
+print(l)
+
+# Complexité dans le pire des cas : O(n^2)
+# Complexité meilleurs des cas :    O(n)
+# }}}
+
+# {{{ Exercice 5
+def pgcd(a, b):
+    if b == 0:
+        return a
+    else:
+        d = divmod(a, b)
+        return pgcd(b, d[1])
+
+def facteur(n):
+    d = 1
+    while d == 1:
+        a = rd.randint(0, n-1)
+        b = rd.randint(0, n-1)
+        d = pgcd(abs(a-b), n)
+        if d != 1 and d != n:
+            return d
+    return n
+# print(facteur(15770708441))
+
+def f(x, n):
+    return divmod(x*x+1, n)[1]
+
+def rhoPollard(n):
+    u = 1
+    v = 2
+    d = 1
+    while d == 1:
+        u = f(u, n)
+        v = f(f(v, n), n)
+        d = pgcd(abs(u-v), n)
+    return d
+print(rhoPollard(15770708441))
+print(rhoPollard((2**(2**5)) + 1))
+print(rhoPollard((2**(2**6)) + 1))
+print(rhoPollard((2**(2**10)) + 1))
+
+# }}}
+
+# }}}
+
 
