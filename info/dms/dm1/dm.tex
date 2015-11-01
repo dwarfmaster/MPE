@@ -1,0 +1,233 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\M}{\mathscr{M}}
+\newcommand{\T}{\tau}
+\newcommand{\G}{\mathscr{G}}
+\newcommand{\norm}[1]{\|#1\|}
+\newcommand{\scal}{.}
+\newcommand{\seg}[2]{\llbracket #1, #2 \rrbracket}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\lstset{basicstyle=\normalsize,
+    numbers=left,
+    numberstyle=\color{black}\normalsize\textbf,
+    numbersep=7pt,
+    backgroundcolor=\color{white},
+    commentstyle=\color{black}\textit,
+    keywordstyle=\color{black}\textbf,
+    rulecolor=\color{black},
+    stringstyle=\color{black}\textit,
+    identifierstyle=\color{black},
+    frame=none,
+    showstringspaces=true,
+}
+
+\hypersetup {
+    colorlinks=true,
+}
+
+\renewcommand{\thesection}{Partie \Roman{section} -}
+
+\title{Informatique\\-- Devoir Maison 1 --}
+\author{Luc Chabassier}
+
+\begin{document}
+\maketitle
+\section{Systèmes de pièces}
+\begin{enumerate}
+    \item[I.A] Teste récursivement la validité du système :
+        \begin{lstlisting}[language=Caml]
+let rec est_un_systeme l = match l with
+| []        -> false
+| h::[]     -> h == 1
+| h1::h2::t -> h1 > h2 && est_un_systeme (h2::t);;
+        \end{lstlisting}
+\end{enumerate}
+
+\section{Représentations de poids minimal}
+\begin{enumerate}
+    \item[II.A] On procède par récurrence sur $x\in\N$ pour la deuxième inégalité.
+        \begin{itemize}
+            \item Si $x=0$, $k = 0_{\N^m}$ convient donc $\M(x) = 0$. Donc $\M(x) \leq x$.
+            \item Soit $x\in\N$ tel que $\M(x)\leq x$. Soit $k\in\N^m$ tel que $k\scal c = x$ et $\norm{k} = \M(x)$. Posons $k' = k + e_m$. On a $k'\scal c = x+1$. Par conséquent $\M(x+1)\leq \norm{k'} = \M(x) + 1 \leq x+1$.
+        \end{itemize}
+
+        De plus, avec $\floor*{\frac{x}{c_1}}$ pièces, on peut atteindre un valeur maximum (en ne prenant que des pièces de valeurs $c_1$) de $n = \floor*{\frac{x}{c_1}} * c_1 \leq x$. Si l'inégalité est stricte, il faut donc au moins $\floor*{\frac{x}{c_1}} + 1 = \ceil*{\frac{x}{c_1}}$ pièces. Si il y a égalité, cela signifie que $\frac{x}{c_1} \in\N$, et donc $\ceil*{\frac{x}{c_1}} = \floor*{\frac{x}{c_1}}$. Donc $\forall k\in\N^m, k.c = x \implies \norm{k} \geq \ceil*{\frac{x}{c_1}}.$
+
+        On a donc $\forall x \in\N^m, \ceil*{\frac{x}{c_1}} \leq \M(x) \leq x$.
+
+    \item[II.B] Posons $c = (3,2,1)$. Dans ce système $4 = (0,2,0)\scal c = (1,0,1)\scal c$.
+
+    \item[II.C] Soit $x\in\N^*$ et $j\in\seg{1}{m}$ tel que $c_j\leq x$. Soit $k\in\N^m$ un représentant minimal de $x-c_j$. On pose $k' = k + e_j$. On a $k'\scal c = x$ d'où $\M(x) \leq \norm{k'}$. De plus $\norm{k'} = \norm{k} + 1 = \M(x-c_j) + 1$.
+
+        Donc $\M(x) \leq 1 + \M(x-c_j)$.
+
+    \item[II.D] Soit $x\in\N^*$ et $j\in\seg{1}{m}$ tel que $c_j\leq x$.
+        \paragraph{$\Leftarrow$} Supposons que $\M(x) = 1 + \M(x-c_j)$. Soit $k\in\N^m$ une représentation minimale de $x-c_j$. Posons $k' = k + e_j$. On a $k'\scal c = x$ et $\norm{k'} = \norm{k} + 1 = \M(x)$ donc $k'$ est une représentation minimal de $x$ de $j$-eme composante non nulle.
+        \paragraph{$\Rightarrow$} Soit $k$ une représentation minimale de $x$ avec $k\scal e_j > 0$. Posons $k' = k-e_j$. $k'\scal c = x-c_j$ donc $\M(x-c_j) \leq \norm{k'} = \M(x) - 1$. Supposons que $\M(x-c_j) < \M(x) - 1$. Soit $k_2\in\N^m$ un représentant minimal de $x-c_j$. Posons $k_2' = k + e_j$.$k_2'$ est un représentant de $c$ donc $\M(x) \leq \norm{k_2'} = \norm{k_2} + 1 = \M(x-c_j) + 1 < \M(x)$ : contradiction. Donc $M(x) = 1 + M(x-c_j)$.
+
+    \item[II.E] Soit $x\in\N, x > 1$. Soit $k\in\N^m$ un représentant minimal de $x$. $x\neq 0$ donc $\exists j\in\seg{1}{m} : k\scal e_j \neq 0 \Leftrightarrow \exists j\in\seg{1}{m} : \M(x) = 1 + \M(x-c_j)$. Couplé avec le résultat du \emph{II.C}, on a donc $\M(x) = 1 + \underset{j\in\seg{1}{m}, c_j\leq x}{\min} \M(x-c_j)$.
+
+        Or, par définition de $s$ et par décroissance des $(c_j)$, on a $\{j\in\seg{1}{m} | c_j \leq x\} = \seg{s}{m}$.
+
+        Donc $\M(x) = 1 + \underset{j\in\seg{s}{m}}{\min} \M(x-c_j)$
+
+    \item[II.F] On crée un tableau de taille $x+1$, la première étant nulle et la deuxième valant 1. On parcourt pour $y$ allant de $2$ à $x$ et on remplit la $y$-eme case du tableau à l'aide de la formule précédente, qui requiert $2m$ comparaisons dans le pire des cas. On peut donc remplir le tableau en $O(mx)$.
+
+    \item[II.G] On met en oeuvre l'algorithme décrit ci-dessus :
+        \begin{lstlisting}[language=Caml]
+let poids_minimaux x c =
+    let cv = vect_of_list c in
+    let m  = vect_length cv in
+    let r  = make_vect (x+1) (-1) in
+    r.(0) <- 0;
+    for y = 1 to x do
+        for i = 0 to m - 1 do
+            if cv.(i) <= y then begin
+                if r.(y) < 0 then
+                    r.(y)  <- 1 + r.(y - cv.(i))
+                else if r.(y) > 1 + r.(y - cv.(i)) then
+                    r.(y)  <- 1 + r.(y - cv.(i))
+            end
+        done;
+    done;
+    tl (list_of_vect r);;
+        \end{lstlisting}
+\end{enumerate}
+
+\section{L'algorithme glouton}
+\begin{enumerate}
+    \item[III.A] L'algorithme glouton :
+        \begin{lstlisting}[language=Caml]
+let rec glouton x c = match x with
+| 0 -> []
+| _ -> let h::t = c in
+       let r = x / h in r :: glouton (x - r * h) t;;
+        \end{lstlisting}
+
+    \item[III.C] Si on rend moins de $\floor*{\frac{x}{c_1}}$ pièces de $c_1$, il faudra au moins $c_1$ pièces de $c_2 = 1$ pour compenser. Or $c_1 > 1$, donc il la représentation minimale est celle où l'on rend le plus possibles de pièces de $c_1$, soit $\floor*{\frac{x}{c_1}}$, ce qui correspond à la représentation gloutonne. Donc $(c_1, c_2)$ est canonique.
+
+    \item[III.D] Soit $c = (10, 9, 1)$. On considère $x = 27$. En effet, $\G(27) = \norm{(2, 0, 7)} = 9$. Or $(0, 3, 0)\scal c = 27$ donc $\M(27) \leq 3$. Donc $c$ n'est pas canonique.
+
+    \item[III.E] On procède par récurrence sur $n\in\N$.
+        \begin{itemize}
+            \item Si $n=0$, le résultat est immédiat.
+            \item Soit $n\in\N$ tel que $c_n = (q^n, \ldots, q, 1)$ soit canonique. Considérons $c_{n+1} = (q^{n+1}, q^n, \ldots, q, 1)$.
+
+                Soit $x\in\N$. Si $x<q^{n+1}$, le résultat est immédiat en utilisant la propriété de récurrence. Soit $k$ une représentation minimale de $x$ dans $c_{n+1}$. On a $\M_{c_{n+1}}(x) = k\scal e_1 + \M_{c_n}(x - (k\scal e_1)q^{n+1})$ car si la représentation de $x' = x - (k\scal e_1)q^{n+1}$ n'est pas optimale dans $c_n$, on peut réduire la représentation de $x$ dans $c_{n+1}$. Par propriété de récurrence, $\M_{c_n}(x') = \G_{c_n}(x')$. Posons $y = x - \floor*{\frac{x}{q^{n+1}}}$ et $d =\floor*{\frac{x}{q^{n+1}}} - k\scal e_1$. Supposons que $d > 0$. On a $x' = u + d.q^n$ donc $\T_{c_n}(x') = \T_{c_n}(y) + dq.e_1$. Donc $\G_{c_n}(x') = \G_{c_n}(y) + dq$. On a alors $\M_{c_{n+1}}(x) = k\scal e_1 + \G_{c_n}(y) + dq$. Or on peut réduire $d$ de $1$ en rendant un pièce de $q^{n+1}$ plutôt que $q$ pièces de $q^n$. En itérant le procédé, on trouve que la valeur optimale pour $k\scal e_1$ est $\floor*{\frac{x}{q^{n+1}}}$.
+        \end{itemize}
+
+    \item[III.F] On commence par montrer un certain nombre d'inégalités pour $k=(k_1,\ldots,k_8)$ un représentation minimale de $x\in\N$ :\begin{itemize}
+            \item Si $k_8\geq 2$, on peut réduire le nombre de pièces en rendant une pièce de $2$ plutôt que $2$ pièces de $1$. Donc $k_8\leq 1$.
+            \item Suivant le même raisonnement, on montre que $k_7\leq 4$. On traite plusieurs cas maintenant :\begin{itemize}
+                    \item Si $(k_7,k_8) = (4,0)$, on peut représenter la même quantité avec moins de pièces avec $(k_6, k_7, k_8) = (1, 1, 1)$, donc cette représentation n'est pas optimale.
+                    \item Si $(k_7,k_8) = (3,0)$, on peut réduire de même avec $(k_6,k_7,k_8) = (1, 0, 1)$.
+                    \item Si $(k_7,k_8) = (4,1)$, on peut réduire avec $(k_6,k_7,k_8) = (1,2,0)$.
+                    \item Si $(k_7,k_8) = (3,1)$, on peut réduire avec $(k_6,k_7,k_8) = (1,1,0)$.
+                \end{itemize}
+                On peut donc déduire l'inégalité $2k_7 + k_8 \leq 4$.
+            \item On peut de même montrer que $k_6\leq 1$, donc $5k_6 + 2k_7 + k_8 \leq 9$.
+            \item On montre de même que $k_5\leq 1$ d'où $10k_5 + 5k_6 + 2k_7 + k_8 \leq 19$.
+            \item On montre aussi que $k_4 \leq 4$. On traite les même cas que pour $k_7$ mais avec les dizaines et on trouve $20k_4 + 10k_5 + 5k_6 + 2k_7 + k_8 \leq 49$.
+            \item On montre que $k_3 \leq 1$, soit $50k_3 + 20k_4 + 10k_5 + 5k_6 + 2k_7 + k_8 \leq 99$.
+            \item On montre enfin que $k_2 \leq 1$, soit $100k_2 + 50k_3 + 20k_4 + 10k_5 + 5k_6 + 2k_7 + k_8 \leq 199$.
+        \end{itemize}
+
+        Or si deux représentations de $x$ vérifient les inégalités ci-dessus, elles sont égales d'après l'unicité de la division euclidienne. On constate que la représentation gloutonne vérifie les inégalités ci-dessus, donc elle coïncide avec un représentation minimale. C'est donc une représentation minimale, donc le système euros est canonique.
+
+    \item[III.G] On a $\G(48) = \norm{(1, 0, 1, 1, 0, 0)} = 3$, or $(0, 2, 0, 0, 0, 0)\scal c = 48$ donc $\M(48) \leq 2 < \G(48)$. Le système du Royaume-Uni d'avant la réforme de 1971 n'est pas canonique.
+\end{enumerate}
+
+\section{L'algorithme de Kozen et Zaks}
+\begin{enumerate}
+    \item[IV.A] Supposons $x\leq c_{m-2} + 1$.\begin{itemize}
+            \item Si $x = c_{m-3} = c_{m-2} + 1$, alors $k = (0,\ldots,1, 0, 0)$, la représentation gloutonne, est minimale.
+            \item Sinon, $x$ s'exprime dans $(c_{m-1}, c_m)$, qui est canonique, donc la représentation gloutonne est minimale.
+        \end{itemize}
+        % TODO : deuxième inégalité
+
+    \item[IV.B] Posons $x = 2q$. On a $\T(x) = (1, 0, q-1) \implies \G(x) = q \geq 3$. Or $(0, 2, 0)$ convient, donc $\M(x) \leq 2 < \G(x)$, donc $x$ est un contre exemple : $c$ n'est pas canonique.
+
+        Soit $x'\in\seg{q+2}{2q-1}$. On a $\G(x') = \norm{(1,0,x' - (q+1))} = x' - q$. Soit $k$ un représentation minimale de $x'$. Si $k\scal e_1 = 1$, alors c'est la représentation gloutonne. Supposons maintenant que $k=(0,a,b)$. On a $x' = qa + b$. Or $(q,1)$ est canonique donc $a = \floor*{\frac{x}{q}} = 1$ et $b = x' - q$. Donc $\norm{k} = \G(x')$. On en déduit que $\M(x') = \G(x')$, soit $x'$ n'est pas un contre exemple.
+
+        $x = 2q$ est donc le plus petit contre-exemple.
+
+    \item[IV.C] Posons $\alpha(q) = 2q - 2$. Posons $x = \alpha(q) + 2 = 2q$. $(0,2,0)$ est une représentation de $x$ donc $\M(x) \leq 2$. Or $\G(x) = \norm{(1,0,2)} = 3$. Donc $x$ est un contre exemple. Or $x = c_{m-2} + 2$ donc $x$ est le plus petit contre exemple.
+
+    \item[IV.D] On vient de montrer que les inégalités du \emph{II.A} sont optimales.
+
+    \item[IV.E] Soit $x\in\N$ un témoin et $i\in\seg{1}{m}$ tel que $c_i < x$ et $\G(x-c_i) < \G(x) - 1$. Posons $k = \T(x-c_i) + e_i$. $\norm{k} = \G(x-c_i) + 1 < \G(x)$ et $k\scal c = x$ donc $\M(x) \leq \norm{k} < \G(x)$, donc $x$ est un contre-exemple.
+
+    % TODO : IV.F, contre-exemple de la réciproque
+
+    \item[IV.G] Soit $x\in\N$ le plus petit contre-exemple de $c$. Supposons que $\forall i\in\seg{1}{m}, c_i < x \implies \G(x-c_i) \geq \G(x) - 1$, avec $\G(x-c_i) = \M(x-c_i)$ car $x$ est le plus petit contre-exemple. Donc, en reprenant la notation de $s$ :
+        \[ \forall i\in\seg{s}{m}, \G(x) \leq 1 + \M(x + c_i)
+            \implies \G(x) \leq 1 + \underset{i\in\seg{1}{m}}{\min} \M(x-c_i) = \M(x) \]
+
+        Contradiction avec $x$ contre-exemple. Donc $x$ est un témoin.
+
+    \item[IV.H] Appliquons l'algorithme :\begin{itemize}
+            \item $c = (q,2,1), q \geq 3$. On a $c_{m-2} + 2 = q + 2 > c_1 + c_2 - 1 = q + 1$, donc il ne peut y avoir de contre-exemple, le système est canonique.
+            \item $c = (7,4,1)$. On a $c_{m-2} + 2 = 9$ et $c_1 + c_2 - 1 = 10$. On a :\begin{itemize}
+                    \item $\G(9-7) = 2 \geq \G(9) - 1$, $\G(9-4) = 2 \geq \G(9) - 1$ et $\G(9-1) = 3 \geq \G(9) - 1$
+                    \item $\G(10-7) = 3 \geq \G(10) - 1$, $\G(10-4) = 3\geq \G(10) - 1$ et $\G(10-1) = 3 \geq \G(10) - 1$
+                \end{itemize}
+                Il n'y a pas de contre-exemple, donc le système est canonique.
+            \item $c = (6, 5, 1)$. On a $c_{m-2} + 2 = 8$ et $c_1 + c_2 - 1 = 10$. On a :
+                \begin{itemize}
+                    \item $\G(8 - 6) \geq \G(8) - 1$, $\G(8 - 5) \geq \G(8) - 1$ et $\G(8 - 1) \geq \G(8) - 1$
+                    \item $\G(9 - 6) \geq \G(9) - 1$, $\G(9 - 5) \geq \G(9) - 1$ et $\G(9 - 1) \geq \G(9) - 1$
+                    \item $\G(10 - 6) = 4 \geq \G(10) - 1 = 4$, mais $\G(10 - 5) = 1 < \G(10) - 1$.
+                \end{itemize}
+                On a fait apparaitre un témoin donc un contre-exemple, le système n'est pas canonique.
+        \end{itemize}
+
+    \item[IV.I] On utilise l'algorithme \texttt{glouton} précédent pour calculer la décomposition gloutonne. On code aussi la fonction \texttt{lsum} qui prend une liste d'entier et renvoie la somme de ces entiers :
+        \begin{lstlisting}[language=Caml]
+let rec lsum l = match l with
+| []   -> 0
+| h::t -> h + lsum t;;
+        \end{lstlisting}
+
+        On peut maintenant coder l'algorithme de Kozen et Zaks :
+        \begin{lstlisting}[language=Caml]
+let kozen_zaks c =
+    let v = vect_of_list c in
+    let m = vect_length v in
+    let d = v.(m-3) + 2 and f = v.(0) + v.(1) + 1 in
+    let r = ref true in
+    for x = d to f do
+        for i = 0 to m - 1 do
+            if v.(i) < x then begin
+                let g = glouton x c and g2 = glouton (x - v.(i)) c in
+                if lsum g < lsum g2 - 1 then r := false;
+            end;
+        done;
+    done;
+    !r;;
+        \end{lstlisting}
+
+    \item[IV.K] L'algorithme \texttt{glouton} ayant une complexité en $O(m)$ et la boucle intérieure bouclant $m$ fois, la boucle intérieur a une complexité en $O(m^2)$. Il s'agit maintenant d'exiber des systèmes tels que $c_1 + c_2 - c_{m-2} - 3$ grandisse exponentiellement avec $m$.
+
+        Considérons les systèmes $c_m = (q^m, \ldots, q, 1)$. Ces systèmes sont canoniques (déjà montré). Or $c_1 + c_2 - c_{m-2} - 3 = q^m\left(1 - \frac{1}{q^2} - \frac{1}{q^{m-2}} - \frac{3}{q^m}\right) \underset{m\rightarrow +\infty}{\sim} q^m\left(1 - \frac{1}{q^2}\right)$. Donc sur ces systèmes la complexité est en $O(m^2q^m)$, soit sur-exponentielle.
+
+        Considérons les systèmes $c_m = (q^m + 1, q^m, 1)$. Ces systèmes ne sont pas canoniques (déjà montré). Or $c_1 + c_2 - c_{m-2} - 3 = q^m\left(1 - \frac{2}{q^m}\right) \underset{m\rightarrow +\infty}{\sim} q^m$. Donc la complexité est là aussi en $O(m^2q^m)$.
+\end{enumerate}
+
+\end{document}
+
