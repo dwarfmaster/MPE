@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
-\usepackage{geometry}
+\usepackage[margin=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathrsfs}
@@ -12,6 +12,7 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage{tikz}
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\M}{\mathscr{M}}
@@ -49,7 +50,7 @@
 \begin{document}
 \maketitle
 \section{Systèmes de pièces}
-\begin{enumerate}
+\begin{description}
     \item[I.A] Teste récursivement la validité du système :
         \begin{lstlisting}[language=Caml]
 let rec est_un_systeme l = match l with
@@ -57,10 +58,10 @@ let rec est_un_systeme l = match l with
 | h::[]     -> h == 1
 | h1::h2::t -> h1 > h2 && est_un_systeme (h2::t);;
         \end{lstlisting}
-\end{enumerate}
+\end{description}
 
 \section{Représentations de poids minimal}
-\begin{enumerate}
+\begin{description}
     \item[II.A] On procède par récurrence sur $x\in\N$ pour la deuxième inégalité.
         \begin{itemize}
             \item Si $x=0$, $k = 0_{\N^m}$ convient donc $\M(x) = 0$. Donc $\M(x) \leq x$.
@@ -108,10 +109,10 @@ let poids_minimaux x c =
     done;
     tl (list_of_vect r);;
         \end{lstlisting}
-\end{enumerate}
+\end{description}
 
 \section{L'algorithme glouton}
-\begin{enumerate}
+\begin{description}
     \item[III.A] L'algorithme glouton :
         \begin{lstlisting}[language=Caml]
 let rec glouton x c = match x with
@@ -151,10 +152,10 @@ let rec glouton x c = match x with
         Or si deux représentations de $x$ vérifient les inégalités ci-dessus, elles sont égales d'après l'unicité de la division euclidienne. On constate que la représentation gloutonne vérifie les inégalités ci-dessus, donc elle coïncide avec un représentation minimale. C'est donc une représentation minimale, donc le système euros est canonique.
 
     \item[III.G] On a $\G(48) = \norm{(1, 0, 1, 1, 0, 0)} = 3$, or $(0, 2, 0, 0, 0, 0)\scal c = 48$ donc $\M(48) \leq 2 < \G(48)$. Le système du Royaume-Uni d'avant la réforme de 1971 n'est pas canonique.
-\end{enumerate}
+\end{description}
 
 \section{L'algorithme de Kozen et Zaks}
-\begin{enumerate}
+\begin{description}
     \item[IV.A] Supposons $x\leq c_{m-2} + 1$.\begin{itemize}
             \item Si $x = c_{m-3} = c_{m-2} + 1$, alors $k = (0,\ldots,1, 0, 0)$, la représentation gloutonne, est minimale.
             \item Sinon, $x$ s'exprime dans $(c_{m-1}, c_m)$, qui est canonique, donc la représentation gloutonne est minimale.
@@ -173,7 +174,13 @@ let rec glouton x c = match x with
 
     \item[IV.E] Soit $x\in\N$ un témoin et $i\in\seg{1}{m}$ tel que $c_i < x$ et $\G(x-c_i) < \G(x) - 1$. Posons $k = \T(x-c_i) + e_i$. $\norm{k} = \G(x-c_i) + 1 < \G(x)$ et $k\scal c = x$ donc $\M(x) \leq \norm{k} < \G(x)$, donc $x$ est un contre-exemple.
 
-    % TODO : IV.F, contre-exemple de la réciproque
+    \item[IV.F] On se place dans le système $c = (5,4,1)$ et on considère $n=12$. On a $(0,3,0)\scal c = 12$ donc $\M(12) \leq 3$. De plus $\G(12) = 4$. Donc $12$ est un contre exemple. Calculons maintenans :\begin{itemize}
+            \item $\G(12-5) = \G(7) = 3  \geq \G(12) - 1$
+            \item $\G(12-4) = \G(8) = 4  \geq \G(12) - 1$
+            \item $\G(12-1) = \G(11) = 3 \geq \G(12) - 1$
+        \end{itemize}
+
+        Donc $12$ n'est pas un témoin : il existes des contre-exemples qui ne sont pas de témoins.
 
     \item[IV.G] Soit $x\in\N$ le plus petit contre-exemple de $c$. Supposons que $\forall i\in\seg{1}{m}, c_i < x \implies \G(x-c_i) \geq \G(x) - 1$, avec $\G(x-c_i) = \M(x-c_i)$ car $x$ est le plus petit contre-exemple. Donc, en reprenant la notation de $s$ :
         \[ \forall i\in\seg{s}{m}, \G(x) \leq 1 + \M(x + c_i)
@@ -222,12 +229,99 @@ let kozen_zaks c =
     !r;;
         \end{lstlisting}
 
-    \item[IV.K] L'algorithme \texttt{glouton} ayant une complexité en $O(m)$ et la boucle intérieure bouclant $m$ fois, la boucle intérieur a une complexité en $O(m^2)$. Il s'agit maintenant d'exiber des systèmes tels que $c_1 + c_2 - c_{m-2} - 3$ grandisse exponentiellement avec $m$.
+    \item[IV.K] L'algorithme \texttt{glouton} ayant une complexité en $O(m)$ et la boucle intérieure bouclant $m$ fois, la boucle intérieure a une complexité en $O(m^2)$. Il s'agit maintenant d'exiber des systèmes tels que $c_1 + c_2 - c_{m-2} - 3$ grandisse exponentiellement avec $m$.
 
         Considérons les systèmes $c_m = (q^m, \ldots, q, 1)$. Ces systèmes sont canoniques (déjà montré). Or $c_1 + c_2 - c_{m-2} - 3 = q^m\left(1 - \frac{1}{q^2} - \frac{1}{q^{m-2}} - \frac{3}{q^m}\right) \underset{m\rightarrow +\infty}{\sim} q^m\left(1 - \frac{1}{q^2}\right)$. Donc sur ces systèmes la complexité est en $O(m^2q^m)$, soit sur-exponentielle.
 
-        Considérons les systèmes $c_m = (q^m + 1, q^m, 1)$. Ces systèmes ne sont pas canoniques (déjà montré). Or $c_1 + c_2 - c_{m-2} - 3 = q^m\left(1 - \frac{2}{q^m}\right) \underset{m\rightarrow +\infty}{\sim} q^m$. Donc la complexité est là aussi en $O(m^2q^m)$.
-\end{enumerate}
+        Considérons les systèmes $c_m = (q^m, q^{m-1}, \ldots q^3, q^2+1, q^2, 1)$. Ces systèmes ne sont pas canoniques, car sinon $(q^2+1,q^2,1)$ le serait. Or $c_1 + c_2 - c_{m-2} - 3 = q^m\left(1 + \frac{1}{q} - \frac{1}{q^{m-2}} - \frac{4}{q^m}\right) \underset{m\rightarrow +\infty}{\sim} \left(1 - \frac{1}{q}\right)q^m$. Donc la complexité est là aussi en $O(m^2q^m)$.
+\end{description}
+
+\section{Répartition de paire de skis}
+\begin{center}
+    \begin{tikzpicture}
+        % Axis j
+        \draw (0,0) -- (2,0);
+        \draw (2,0) [dotted,thick] -- (5,0);
+        \draw (5,0) [arrows=->] -- (8,0) node [right] {$j$};
+        % Axis i
+        \draw (0,0) -- (0,2);
+        \draw (0,2) [dotted,thick] -- (0,5);
+        \draw (0,5) [arrows=->] -- (0,7) node [above] {$i$};
+
+        % Beginning point
+        \draw (0.1,6) -- (-0.1,6) node [left] {$n-1$};
+        \draw (7,0.1) -- (7,-0.1) node [below] {$m-1$};
+        \fill [red] (7,6) circle[radius=2pt];
+        \draw [red] (0,6) [loosely dotted,thick] -- (7,6);
+        \draw [red] (7,0) [loosely dotted,thick] -- (7,6);
+
+        % Dependencies
+        \draw [arrows=->,blue,thick] (6.8,6) -- (6.2,6);
+        \draw [arrows=->,blue,thick] (6.8,5.8) -- (6.2,5.2);
+        \fill [blue] (6,6) circle[radius=2pt];
+        \fill [blue] (6,5) circle[radius=2pt];
+        \draw [arrows=->,blue,thick] (5.8,5.8) -- (5.2,5.2);
+        \draw [arrows=->,blue,thick] (5.8,5) -- (5.2,5);
+        \fill [blue] (5,5) circle[radius=2pt];
+
+        \draw [blue] (4.8,4.8) [dotted,thick] -- (2.2,2.2);
+        \draw [blue] (5.8,4.8) [dotted,thick] -- (2.2,1.2);
+        \fill [blue] (2,2) circle[radius=2pt];
+        \draw [arrows=->,blue,thick] (1.8,1.8) -- (1.2,1.2);
+        \fill [blue] (2,1) circle[radius=2pt];
+        \draw [arrows=->,blue,thick] (1.8,0.8) -- (1.2,0.2);
+        \draw [arrows=->,blue,thick] (1.8,1) -- (1.2,1);
+        \fill [blue] (1,1) circle[radius=2pt];
+        \draw [arrows=->,blue,thick] (0.8,0.8) -- (0.2,0.2);
+        \fill [blue] (1,0) circle[radius=2pt];
+        \draw [arrows=->,blue,thick] (0.8,0) -- (0.2,0);
+        \fill [blue] (0,0) circle[radius=2pt];
+    \end{tikzpicture}
+\end{center}
+
+Le points rouge est celui dont la valeur nous intéresse. Les flèches bleus indiquent les dépendances. On ne doit donc calculer que les valeurs des points colorés en bleu.
+Il y en a $n(m-n+1)$ : on doit calculer $n$ lignes, et sur chaque seuls ceux entre la diagonale passant par l'origine et celle passant par $(m,n)$ nous intéressent.
+
+Plutôt que de créer un tableau avec $nm$ cases et les remplir à une valeur indiquant l'absence de calcul, on peut se contenter d'utiliser un tableau de taille $m-n+1$, représentant une ligne. On calcule ensuite la ligne suivante dans le même tableau selon les $j$ croissants, ce qui est possible car pour calculer un points, on n'utilise que la valeur sur $j-1$ sur la même ligne (calculé précédemment) ou la valeur sur $(j-1,i-1)$, qui n'est pas encore remplacée par la nouvelle valeur.
+
+\begin{lstlisting}[language=Caml]
+let paires_ski h s =
+    let m = vect_length s in
+    let n = vect_length h in
+    let l = make_vect (m-n+1) (abs (h.(0) - s.(0))) in
+    let d = make_matrix n (m-n+1) false in
+    for j = 1 to m - n do
+        if l.(j-1) < abs (h.(0) - s.(j)) then begin
+            d.(0).(j) <- true;
+            l.(j) <- l.(j-1);
+        end else l.(j) <- abs (h.(0) - s.(j))
+    done;
+    for i = 1 to n - 1 do
+        l.(0) <- l.(0) + abs (h.(i) - s.(i));
+        for j = 1 to m - n do
+            let t = l.(j) + abs (h.(i) - s.(i+j)) in
+            if t < l.(j-1) then l.(j) <- t
+            else begin
+                l.(j) <- l.(j-1);
+                d.(i).(j) <- true;
+            end;
+        done;
+    done;
+    let r = make_vect n 0 in
+    let rec attribution i j = match (i,j) with
+    | (0,0)         -> r.(0) <- 0
+    | (0,_)         -> if d.(0).(j) then attribution i (j-1) else r.(0) <- j
+    | _ when j == 0 -> begin
+                r.(i) <- i;
+                attribution (i-1) j;
+            end;
+    | _             -> if d.(i).(j) then attribution i (j-1)
+                       else begin
+                           r.(i) <- i + j;
+                           attribution (i-1) j;
+                       end;
+    in attribution (n-1) (m-n); r;;
+\end{lstlisting}
 
 \end{document}
 
