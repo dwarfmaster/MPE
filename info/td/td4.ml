@@ -38,14 +38,23 @@ let rec cat l1 l2 = match l1 with
 | h::t -> if has l2 h then cat t l2
                       else cat t (h::l2);;
 
-(* TODO: Peut s'accélérer en triant au passage les listes en les remplissant
- *)
+let rec insert x l = match l with
+| []     -> x::[]
+| h :: t -> if h < x       then h :: insert x t
+            else if h == x then l
+                           else x :: l;;
+
 let unorient adj =
     let n = vect_length adj in
-    let c = coadj adj in
     let un = make_vect n [] in
     for i = 0 to n-1 do
-        un.(i) <- cat adj.(i) c.(i);
+        let l = ref adj.(i) in
+        while !l <> [] do
+            let h::t = !l in
+            un.(i) <- insert h un.(i);
+            un.(h) <- insert i un.(h);
+            l := t;
+        done;
     done;
     un;;
 
