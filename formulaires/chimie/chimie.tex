@@ -1,5 +1,7 @@
+% vim:set foldmethod=marker:
 \documentclass[12pt,a4paper] {article}
 
+% {{{ Préambule
 \usepackage[utf8]                               {inputenc}
 \usepackage[T1]                                 {fontenc}
 \renewcommand{\sfdefault}{phv}
@@ -25,12 +27,14 @@
     linkcolor     = red,
     bookmarksopen = true
 }
+% }}}
 
 \begin{document}
 \title{Formulaire chimie}
 \author{Luc Chabassier}
 \maketitle
 
+% {{{ Définition
 \section{Définitions}
 \begin{tabularx}{\linewidth}{|>{\bfseries}p{0.33\linewidth}|X|} \hline
     Énergie interne & $\Delta U = W + Q$ \\ \hline
@@ -55,6 +59,9 @@
     Fraction molaire & $x_i$ \\ \hline
     Solution idéale & Intéraction entre molécules du mélange de même intensité \\ \hline
     Solution diluée & Solution avec un corps (le solvant) de fraction molaire fortement supérieure à celle des autres corps (solutés) \\ \hline
+    Quotient de réaction/produit des activités & $Q_r = \prod_i a_i^{\nu_i}$ \\ \hline
+    Constante d'équilibre $K^0$ & $\Delta_r G^0 = -RT\ln K^0$ \\ \hline
+    Variance $v$ & Nombre minimal de paramètres intensifs indépendants nécessaires pour définir l'état d'équilibre du système \\ \hline
 \end{tabularx}
 
 Constantes : \\
@@ -63,12 +70,17 @@ Constantes : \\
     $p^0$ & $1 bar = 10^5 Pa$ \\ \hline
     $c^0$ & $1mol.l^{-1}$ \\ \hline
 \end{tabular}\end{center}
+% }}}
 
+% {{{ Approximations
 \section{Approximations}
 \begin{itemize}
+    \item On considère une réaction chimique en solution monotherme et monobare dans la plupart des cas.
     \item On néglige la dépendance de $\Delta_r H^0$ en $T$.
 \end{itemize}
+% }}}
 
+% {{{ Relations
 \section{Relations}
 \begin{tabularx}{\linewidth}{|l|X|} \hline
     \bf{Relation}    & \bf{Conditions} \\ \hline
@@ -89,6 +101,11 @@ Constantes : \\
     $\mu_i(T,p) = \mu_i^0(T) + RT\ln(a_i)$ & $\emptyset$ \\ \hline
     $\forall (i,j), \mu_i = \mu_j$ & Équilibre physique dans la même phase \\ \hline
     $\Delta_r G^0 = \sum_i \nu_i\mu_i^0$ & $\emptyset$ \\ \hline
+    $\Delta_r Gd\xi = -T\delta S_{cree} \leq 0$ & Monotherme et monobare \\ \hline
+    $\Delta_r G = \Delta_r G^0 + RT\ln Q_r$ & $\emptyset$ \\ \hline
+    $K^0 = \prod_i a_{i(equil)}^{\nu_i}$ & $\emptyset$ (Loi d'action des masses/loi de Guldberg et Waage) \\ \hline
+    $\Delta_r G = RT\ln Q_r - RT\ln K^0$ & $\emptyset$ \\ \hline
+    $\frac{d\ln K^0}{dT} = \frac{\Delta_r H^0}{RT^2}$ & $\emptyset$ (loi de Van't Hoff) \\ \hline
 \end{tabularx}
 
 Variation d'entropie sur les différentes phases et les changements de phase :
@@ -104,7 +121,9 @@ Activités : \\
     Solvant en solution diluée & $1$ \\ \hline
     Soluté en solution idéale & $\frac{c_i}{c^0}$ \\ \hline
 \end{tabular}\end{center}
+% }}}
 
+%{{{ Interprétations
 \section{Interprétations}
 \begin{tabularx}{\linewidth}{|l|X|} \hline
     \bf{Fait} & \bf{Interprétation} \\ \hline
@@ -114,7 +133,19 @@ Activités : \\
     $\Delta_r H^0 < 0$ & Réaction exothermique \\ \hline
     $\Delta_r S^0 > 0$ & Augmentation du désordre (ie $\Delta_r \nu_g > 0$) \\ \hline
     $\Delta_r S^0 < 0$ & Diminution du désordre (ie $\Delta_r \nu_g < 0$) \\ \hline
+    $\Delta_r G < 0$ & $d\xi > 0$ : évolution vers la droite \\ \hline
+    $\Delta_r G > 0$ & $d\xi < 0$ : évolution vers la gauche \\ \hline
+    $\Delta_r G = 0$ & $\delta S_{cree} = 0$ : équilibre chimique \\ \hline
+    $Q_r < K^0$ & $\Delta_r G < 0$ : réaction évolue vers la droite \\ \hline
+    $Q_r > K^0$ & $\Delta_r G > 0$ : réaction évolue vers la gauche \\ \hline
+    $Q_r = K^0$ & $\Delta_r G = 0$ : équilibre chimique \\ \hline
+    $K^0 >> 1$ & Réaction déplacée vers la droite \\ \hline
+    $K^0 << 1$ & Réaction déplacée vers la gauche \\ \hline
+    Réaction endothermique & si $T$ augmente, $K^0$ diminue \\ \hline
+    Réaction exothermique & si $T$ diminue, $K^0$ augmente \\ \hline
+    Réaction athermique & $K^0$ indépendant par rapport à $T$ \\ \hline
 \end{tabularx}
+% }}}
 
 \end{document}
 
