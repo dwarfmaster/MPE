@@ -31,94 +31,90 @@
 \author{Luc Chabassier}
 \maketitle
 
-\section{Fonction d'état extensive}
-\begin{tabularx}{\linewidth}{rlX}
-    Énergie interne & $\Delta U = W + Q$ & \\
-    Entalpie & $H = U + pV$ & \\
-    Entropie & $\Delta S = S_{ech} + S_{créé}$ & \\
-    Entalpie libre & $G = H - TS$ & aussi appelée potentiel thermodynamique, puisque minimal à l'équilibre. \\
+\section{Définitions}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{0.33\linewidth}|X|} \hline
+    Énergie interne & $\Delta U = W + Q$ \\ \hline
+    Enthalpie        & $H = U + pV$ \\ \hline
+    Entropie        & $\Delta S = S_{ech} + S_{cree}$ \\ \hline
+    Enthalpie libre  & $G = H - TS$ \\ \hline
+    Potentiel thermodynamique & Autre nom de l'enthalpie libre, puisque minimale à l'équilibre. \\ \hline
+    Grandeur de réaction & $X \in\{H; S; G\}, X(T, p, \ldots, n_i, \ldots)$ \\ \hline
+    $X_{m_i}$ & $X_{m_i} = \frac{\partial X}{\partial n_i}$ \\ \hline
+    $X_{m_i}^*$ & $X_{m_i}^* = \frac{X}{n_i}$ si $A_i$ est pur \\ \hline
+    Coefficient stœchiométrique algébrique & $\nu_i$ \\ \hline
+    Avancement d'une réaction & $d\xi = \frac{dn_i}{\nu_i}$, d'où $X(T,p,\xi)$ \\ \hline
+    $\Delta_r X$ & $\Delta_r X = \frac{\partial X}{\partial \xi} = \sum_i \nu_i X_{m_i}$ \\ \hline
+    Enthalpie de réaction & $\Delta_r H = \frac{\partial H}{\partial \xi} = \sum_i \nu_i H_{m_i}$ \\ \hline
+    État standard & État pour $p^0$. Pour un constituant gazeux, état sous $p^0$ à la même température du gaz parfait pur associé. Pour un constituant condensé, état de ce constituant pur dans le même état physique à la même température sous $p^0$ \\ \hline
+    État standard de référence & État standard du corps simple dans son état physique le plus stable dans les conditions standard. \\ \hline
+    Enthalpie standard de référence & Enthalpie de réaction du réactif/produit dans son état standard, noté $H_{m_i}^0(T)$. \\ \hline
+    $\Delta_r H^0$ & $\Delta_r H^0 = \sum_i \nu_i H_{m_i}^0$ \\ \hline
+    Réaction de formation d'une espèce chimique & À température fixée, réaction au cours de laquelle une mole de l'espèce dans son état standard est créée à partir des crops simples qui le constituent, chacun dans son état standard \\ \hline
+    Enthalpie standard de formation d'un corps simpe & Enthalpe de la réaction de formation $\Delta_f H^0 = \Delta_r H^0$ \\ \hline
+    Potentiel chimique & $\mu_i = \frac{\partial G}{\partial n_i}$ \\ \hline
+    Fraction molaire & $x_i$ \\ \hline
+    Solution idéale & Intéraction entre molécules du mélange de même intensité \\ \hline
+    Solution diluée & Solution avec un corps (le solvant) de fraction molaire fortement supérieure à celle des autres corps (solutés) \\ \hline
 \end{tabularx}
 
-Pour une évolution monobare : \[\Delta H = Q_p\]
+Constantes : \\
+\begin{center}\begin{tabular}{|l|l|} \hline
+    \bf{Constante} & \bf{Valeur} \\ \hline
+    $p^0$ & $1 bar = 10^5 Pa$ \\ \hline
+    $c^0$ & $1mol.l^{-1}$ \\ \hline
+\end{tabular}\end{center}
 
-Pour un système qui n'est lieu ni de réaction chimique, ni de changement de phase : \[dG = Vdp - SdT\]
+\section{Approximations}
+\begin{itemize}
+    \item On néglige la dépendance de $\Delta_r H^0$ en $T$.
+\end{itemize}
 
-Pour une évolution monotherme et monobare entre deux états d'équilibre : \[\Delta G = -T_{ext}S_{créé}\]
+\section{Relations}
+\begin{tabularx}{\linewidth}{|l|X|} \hline
+    \bf{Relation}    & \bf{Conditions} \\ \hline
+    $\Delta H = Q_p$ & Monobare \\ \hline
+    $dG = Vdp - SdT$ & Pas de réaction chimique, ni changement de base \\ \hline
+    $\Delta G = -T_{ext}S_{cree}$ & Monotherme et monobare entre deux états d'équilibre \\ \hline
+    $dX_{T,p} = \sum_i X_{m_i}dn_i$ & $\emptyset$ \\ \hline
+    $X_{m_i} = X_{m_i}^*$ & Mélange idéal \\ \hline
+    $\Delta H = \xi \Delta_r H$ & Monotherme et monobare \\ \hline
+    $\Delta_r H^0 \approx \Delta_r H$ & $\emptyset$ \\ \hline
+    $\Delta_f H^0(A) = 0$ & $A$ corps simple \\ \hline
+    $\Delta_f H^0(H^+_{(aq)}) = 0$ & $\emptyset$ \\ \hline
+    $\Delta_r H^0 = \sum_i \nu_i \Delta_f H_i^0$ & $\emptyset$ (loi de Hess) \\ \hline
+    $\Delta_r S^0 = \sum_i \nu_i \Delta_f S_i^0$ & $\emptyset$ (loi de Hess) \\ \hline
+    $\Delta_f S^0(A) = \Delta_f S^0(H^+_{(aq)}) = 0$ & $A$ corps simple \\ \hline
+    $\Delta_r G^0 = \Delta_r H^0 - T\Delta_r S^0$ & $\emptyset$ \\ \hline
+    $\Delta_r G^0 = \sum_i \nu_i\Delta_f G_i^0$ & $\emptyset$ (loi de Hess) \\ \hline
+    $\mu_i(T,p) = \mu_i^0(T) + RT\ln(a_i)$ & $\emptyset$ \\ \hline
+    $\forall (i,j), \mu_i = \mu_j$ & Équilibre physique dans la même phase \\ \hline
+    $\Delta_r G^0 = \sum_i \nu_i\mu_i^0$ & $\emptyset$ \\ \hline
+\end{tabularx}
 
-\section{Grandeur de réaction}
-$X \in \{H; S; G\}$, on a $X(T, p, \ldots, n_i, \ldots)$.
-
-Donc $dX_{T,p} = \sum_i X_{m_i}dn_i$ avec $X_{m_i} = \frac{\partial X}{\partial n_i}$.
-
-Si $A_i$ est pur, on pose $X_{m_i}^* = \frac{X}{n_i}$ la grandeur molaire. Dans le cas d'un mélange idéal, on a $X_{m_i}^* = X_{m_i}$.
-
-Avancement d'une réaction : $d\xi = \frac{dn_i}{\nu_i}$, avec $\nu_i$ le coefficient stochiométrique algébrique. $\xi$ est une grandeur extensive en moles.
-
-On pose $\Delta_r X = \frac{\partial X}{\partial \xi} = \sum_i \nu_i X_{m_i}$ car $X(T,p,\xi)$.
-
-\subsection{Enthalpie de réaction}
-On a $\Delta_r H = \frac{\partial H}{\partial \xi} = \sum_i \nu_i H_{m_i}$
-
-Une réaction chimique étant monotherme et monobare, on a : $\Delta H = \xi \Delta_r H$.
-
-On a donc si $\Delta_r H > 0$, la réaction est endothermique et si $\Delta_r H < 0$, la réaction est exothermique.
-
-\section{Enthalpie standard de réaction}
-État standard : état pour $p^0 = 1\text{ bar} = 10^5 Pa$. Pour un constituant gazeux, état sous $p^0$ à la même température du gaz parfait pur associé. Pour un constituant condensé, état de ce constituant pur dans le même état physique à la même température sous $p^0$.
-
-État standard de référence : état standard du corps simple dans son état physique le plus stable dans les conditions standards.
-
-Enthalpie standard de réaction : enthalpie de réaction du réactif (ou produit) dans son état standard, notée $H_{m_i}^0(T)$. On construit alors $\Delta_r H^0 = \sum_i \nu_i H_{m_i}^0$. On constate $\Delta_r H^0 \approx \Delta_r H$, d'où $\Delta H \approx \xi \Delta_r H^0$.
-
-On a donc si $\Delta_r H^0 > 0$, la réaction est endothermique et si $\Delta_r H^0 < 0$, la réaction est exothermique.
-
-Réaction de formation d'une espèce chimique : à une température fixée, réaction au cours de laquelle une mole de l'espèce dans son état standard est créée à partir des corps simples qui le constituent, chacun dans son état standard.
-
-Enthalpie standard de formation d'un corps simple : enthalpie de réaction de la réaction de formation $\Delta_f H^0 = \Delta_r H^0$.
-
-L'enthalpie standard de formation d'un corps simple dans son état standard de référence est nulle à toute température. Par convention, $\Delta_f H(H^+_{(aq)}) = 0$.
-
-Loi de Hess : \[\Delta_r H^0 = \sum_i \nu_i \Delta_f H_i^0\]
-
-On néglige la dépendance de $\Delta_r H^0$ en $T$.
-
-\section{Entropie standard de réaction}
-On étudie la variation d'entropie sur les différentes phases et les changements de phase :
+Variation d'entropie sur les différentes phases et les changements de phase :
 \[ \Delta S_{m_i}^0 = C_{p(solide)}^0\ln\frac{T_{fus}}{T_0} + \frac{\Delta_r H_{fus}^0}{T_{fus}} + C_{p(liquide)}^0\ln\frac{T_{eb}}{T_{fus}} + \frac{\Delta_r H_{eb}^0}{T_{eb}} + C_{p(gaz)}^0\ln\frac{T_1}{T_{eb}} \]
 
-On constate que $\Delta_r S^0$ a le même signe que $\Delta_r\nu_g$, il représente la variation de désordre.
+Activités : \\
+\begin{center}\begin{tabular}{|l|l|} \hline
+    \bf{Nature du corps} & \bf{activité $a_i$} \\ \hline
+    Gaz parfait seul & $\frac{p}{p^0}$ \\ \hline
+    Mélange de gaz parfaits & $\frac{p_i}{p^0}$ avec $p_i = x_ip$ \\ \hline
+    Phase condensée pure & $1$ \\ \hline
+    Solution idéale & $x_i$ \\ \hline
+    Solvant en solution diluée & $1$ \\ \hline
+    Soluté en solution idéale & $\frac{c_i}{c^0}$ \\ \hline
+\end{tabular}\end{center}
 
-Loi de Hess : \[\Delta_r S^0 = \sum_i \nu_i\Delta_f S^0_i\]
-
-L'entropie standard de formation d'un corps simple dans son état standard de réaction est nulle à toute température. Par convention, $\Delta_f S^0(H^+_{(aq)}) = 0$.
-
-\section{Entalpie libre standard de réaction}
-Relation entre les $\Delta_r$ : $\Delta_r G^0 = \Delta_r H^0 - T\Delta_r S^0$.
-
-Loi de Hess : $\Delta_r G^0 = \sum_i \nu_i\Delta_f G_i^0$.
-
-\section{Potentiel chimique}
-Potentiel chimique : $\mu_i = \frac{\partial G}{\partial n_i}$.
-
-Expression de $G$ : $G = \sum_i \mu_i n_i$.
-
-Activité : $\mu_i(T,p) = \mu_i^0(T) + RT\ln(a_i)$, où $a_i$ est l'activité du consituant $A_i$.
-
-Pour un gaz parfait seul, $a_i = \frac{p}{p^0}$. Pour un mélange de gaz parfaits, $a_i = \frac{p_i}{p^0}$, où $p_i = x_ip$ est la pression partielle.
-
-Pour une phase condensée pure $a = 1$.
-
-Solution idéale : intéractions entre molécules du mélange de même intensité.
-
-Dans une solution idéale, $a_i = x_i$ avec $x_i$ la fraction molaire de $A_i$.
-
-Solution diluée : on distincte alors le solvant et le soluté.
-
-Pour le solvant, $a_i = 1$. Pour un soluté, $a_i = \frac{c_i}{c^0}$, avec $c^0 = 1mol.L^{-1}$.
-
-À l'équilibre physique, chaque corps pur a le même potentiel chimique dans les différentes phases.
-
-Autre expression de l'enthalpie libre standard de réaction : $\Delta_r G^0 = \sum_i \nu_i \mu_i^0$.
+\section{Interprétations}
+\begin{tabularx}{\linewidth}{|l|X|} \hline
+    \bf{Fait} & \bf{Interprétation} \\ \hline
+    $\Delta_r H > 0$ & Réaction endothermique \\ \hline
+    $\Delta_r H < 0$ & Réaction exothermique \\ \hline
+    $\Delta_r H^0 > 0$ & Réaction endothermique \\ \hline
+    $\Delta_r H^0 < 0$ & Réaction exothermique \\ \hline
+    $\Delta_r S^0 > 0$ & Augmentation du désordre (ie $\Delta_r \nu_g > 0$) \\ \hline
+    $\Delta_r S^0 < 0$ & Diminution du désordre (ie $\Delta_r \nu_g < 0$) \\ \hline
+\end{tabularx}
 
 \end{document}
 
