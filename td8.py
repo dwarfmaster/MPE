@@ -52,7 +52,7 @@ def graph(i, j, a, b):
     plt.title("Exp sums")
     plt.show()
 
-# graph(2, 7, 0, 1)
+graph(2, 7, 0, 1)
 
 # TODO
 
@@ -67,7 +67,7 @@ def swap(l, i, j):
 def partition2(l, a, b):
     m = a
     M = b
-    p = l[0]
+    p = l[a]
     i = a + 1
     while i < M:
         if l[i] < p:
@@ -85,7 +85,6 @@ def tri_rapide2(l, i, j):
     if j - i <= 1:
         return
     m,M = partition2(l, i, j)
-    print(l, m, M)
     tri_rapide2(l, i, m)
     tri_rapide2(l, M, j)
 
@@ -94,5 +93,18 @@ print(l)
 tri_rapide2(l, 0, len(l))
 print(l)
             
+# }}}
+
+# {{{ Exercice 4
+def codage(L):
+    L2 = [L[0]]
+    for i in range(1,len(L)):
+        L2.append(L2[i-1] + L[i])
+    return L2
+
+def decodage(L2):
+    L = [L2[0]]
+    for i in range(1,len(L2)):
+        L.append(L2[i] - L[i-1])
 # }}}
 
