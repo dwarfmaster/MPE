@@ -40,6 +40,14 @@ let rec fusion l1 l2 = match (l1,l2) with
                                 else h2 :: fusion l1 t2;;
 fusion [1;3;6;8;10;13;15;17;36] [2;5;7;9;10;36];;
 
+let rec intersect l1 l2 = match (l1,l2) with
+| ([],_)          -> []
+| (_,[])          -> []
+| (h1::t1,h2::t2) -> if h1 = h2 then h1 :: intersect t1 t2 else
+                     if h1 < h2 then intersect t1 l2
+                                else intersect l1 t2;;
+intersect [1;3;4;5;6;8;9;10;15] [2;5;6;8;12;15];;
+
 let rec commun l1 l2 = match (l1,l2) with
 | ([],_)          -> false
 | (_,[])          -> false
@@ -200,6 +208,98 @@ automate expression;;
 
 (* }}} *)
 
+(* {{{ Déterminisation *)
+(* {{{ Q12 *)
+let access_part a =
+    let part = ref [] in
+    let file = ref a.initiaux in
+    while !file <> [] do
+        let h::t = !file in
+        file := t;
+        if not commun [h] !part then begin
+            part := fusion [h] !part;
+            let nxts = ref a.Delta.(h) in
+            while !nxts <> [] do
+                let (a,b)::t2 = !nxts in
+                nxts := t2;
+                file := b :: !file;
+            done;
+        end;
+    done;
+    !part;;
+
+
+(* }}} *)
+
+(* {{{ Q13 *)
+let to_access a q =
+    let p = ref [] in
+    let n = vect_length a.Delta in
+    for i = 0 to n - 1 do
+        let nxts = ref a.Delta.(i) in
+        while !nxts <> [] do
+            let (a,b)::t = !nxts in
+            nxts := t;
+            if b = q then begin 
+                p := fusion [i] !p;
+                nxts := []
+            end;
+        done;
+    done;
+    !p;;
+
+let co_access a =
+    let coa = ref [] in
+    let file = ref a.finaux in
+    while !file <> [] do
+        let q::t = !file in
+        file := t;
+        if not commun [q] !coa then begin
+            coa := fusion [q] !coa;
+            let acc = to_access a q in
+            file := fusion !file acc;
+        end;
+    done;
+    !coa;;
+
+(* }}} *)
+
+(* {{{ Q14 *)
+let rec apply_exclude l ar = match l with
+| []   -> []
+| h::t -> if ar.(h) < 0 then apply_exclude t ar
+                        else ar.(h) :: apply_exclude t ar;;
+
+let emonde a =
+    let n = vect_length a.Delta in
+    let nlet = make_vect n 0 in
+    let kp = intersect (access_part a) (co_access a) in
+    let nb = ref 0 in
+    for i = 0 to n - 1 do
+        if commun [i] kp then begin
+            nlet.(i) <- !nb;
+            nb := !nb + 1;
+        end else nlet.(i) <- (-1);
+    done;
+    let nauto = {initiaux = apply_exclude a.initiaux nlet;
+                 finaux   = apply_exclude a.finaux   nlet;
+                 Delta = make_vect !nb []} in
+    for i = 0 to n - 1 do
+        if nlet.(i) >= 0 then begin
+            let cpls = ref a.Delta.(i) in
+            while !cpls <> [] do
+                let (letter,q)::t = !cpls in
+                cpls := t;
+                if nlet.(q) >= 0 then nauto.Delta.(nlet.(i)) <- (letter,nlet.(q)) :: nauto.Delta.(nlet.(i));
+            done;
+        end;
+    done;
+    nauto;;
+
+(* }}} *)
+
+(* }}} *)
+
 (* {{{ Playing *)
 let test exp m =
     let auto = automate exp in test_auto_gen auto m;;
@@ -219,12 +319,14 @@ test mexp (convert "aabababa.ababa@ababaa.ba");;
 test mexp (convert "babbabab.baa@ababa.ab");;
 test mexp (convert "abbaba.abab@aba.b");;
 
-(* }}} *)
+let auto = automate mexp;;
+access_part auto;;
+co_access auto;;
+let eauto = emonde auto;;
 
-(* {{{ Déterminisation *)
-(* {{{ Q12 *)
-
-(* }}} *)
+test_auto_gen eauto (convert "aabababa.ababa@ababaa.ba");;
+test_auto_gen eauto (convert "babbabab.baa@ababa.ab");;
+test_auto_gen eauto (convert "abbaba.abab@aba.b");;
 
 (* }}} *)
 
